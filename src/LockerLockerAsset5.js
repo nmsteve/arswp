@@ -4,6 +4,7 @@ import Topnavicon2 from "./Components/Topnavbar_section/Topnavicon2";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+
 import React from "react";
 
 export default function LockerLockerAsset5() {
@@ -11,7 +12,7 @@ export default function LockerLockerAsset5() {
   const [data, setData] = useState("TokenLocker");
   const handleChange = (value) => {
     setData(value);
-    console.log(value)
+    console.log(data)
   };
   return (
     <>
@@ -43,7 +44,7 @@ export default function LockerLockerAsset5() {
                     className="fl-right"
                     id="Standard"
                     name="Presale"
-                    value="LPToken"
+                    value="standard"
                     onChange={(e) => {
                       handleChange(e.target.value);
                     }}
@@ -60,7 +61,7 @@ export default function LockerLockerAsset5() {
                     className="fl-right"
                     id="Fairlaunch"
                     name="Presale"
-                    value="LPToken"
+                    value="reward"
                     onChange={(e) => {
                       handleChange(e.target.value);
                     }}
@@ -82,7 +83,7 @@ export default function LockerLockerAsset5() {
               </div>
               <div className="clear"></div>
               <div className="app6_form_section_button fl-right">
-                <button onClick={() => navigate(`/Createsalelocker/${data}`)}>
+                <button onClick={() => navigate(`/Createsalelocker/TokenLocker`)}>
                   Next
                 </button>
               </div>

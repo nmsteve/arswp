@@ -32,7 +32,7 @@ import LockerHome1 from "./LocLocAsstLiq";
 import LockerHome3pages from "./LockerLockerAsset4";
 
 import Createsalelocker from "./LockerLockerAsset5";
-import TokenLocker from "./LockerLPToken";
+import TokenLocker from "./LockerTokenLocker";
 import LPLocker from "./LockerLPLocker";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

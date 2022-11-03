@@ -1,7 +1,14 @@
-import React from "react";
+import { React, useState } from "react";
 import Modal from "../ModalLocker";
+import { Spinner } from "react-bootstrap";
+
+import { fetchTokenDetails } from "../connect/dataProccing";
 
 function SignUpInfo({ formData, setFormData }) {
+
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [tokenDetails, setTokenDetails] = useState({})
+
   return (
     <>
       <div className="contain_form">
@@ -21,15 +28,36 @@ function SignUpInfo({ formData, setFormData }) {
                   Token Address <span>*</span>{" "}
                 </p>
 
-                <div class="inputarea_top_rightform_block_1 clear">
+                <div class="inputarea_top_rightform_block_1 clear ">
                   <input
                     type="text"
                     placeholder="Address"
-                    value={formData.password}
-                    onChange={(event) =>
-                      setFormData({ ...formData, password: event.target.value })
+                    value={formData.address}
+                    onInput={async (event) => {
+                      setFormData({ ...formData, address: event.target.value })
+                      console.log(formData.address.length)
+                      setIsProcessing(true)
+                      if (formData.address.length === 42) {
+                        const details = await fetchTokenDetails(formData.address)
+                        console.log(details)
+                        setTokenDetails(details)
+                        setIsProcessing(false)
+                      }
+                    }
+
                     }
                   />
+
+                  {isProcessing
+                    ? <>
+                      <div class="spinner-border text-primary mt-2" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                      {' '}Processing...
+                    </>
+                    : ""
+                  }
+
                 </div>
               </div>
             </div>
@@ -47,7 +75,7 @@ function SignUpInfo({ formData, setFormData }) {
             </div>
             <div className="section_set_1">
               <div className="inner_section_4_a fl-left">Name</div>
-              <div className="inner_section_4_b fl-right"> Swipe Token</div>
+              <div className="inner_section_4_b fl-right">{tokenDetails.name}</div>
             </div>
 
             <div className="clear hr_inner">
@@ -55,14 +83,14 @@ function SignUpInfo({ formData, setFormData }) {
             </div>
             <div className="section_set_1">
               <div className="inner_section_4_a fl-left">Symbol</div>
-              <div className="inner_section_4_b fl-right"> SXP</div>
+              <div className="inner_section_4_b fl-right">{tokenDetails.symbol}</div>
             </div>
             <div className="clear hr_inner">
               <hr />
             </div>
             <div className="section_set_1">
               <div className="inner_section_4_a fl-left">Decimals</div>
-              <div className="inner_section_4_b fl-right">18</div>
+              <div className="inner_section_4_b fl-right">{tokenDetails.decimals}</div>
             </div>
             <div className="clear hr_inner">
               <hr />
@@ -70,7 +98,7 @@ function SignUpInfo({ formData, setFormData }) {
 
             <div className="section_set_1">
               <div className="inner_section_4_a fl-left">Total supply</div>
-              <div className="inner_section_4_b fl-right">200,000,000 SXP</div>
+              <div className="inner_section_4_b fl-right">{tokenDetails.supply}</div>
             </div>
             <div className="clear app10_hr_pad">
               <hr />

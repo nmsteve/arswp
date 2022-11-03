@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SignUpInfo from "./Locker_Lp_token";
 import OtherInfo from "./Preview";
+
 
 function Form() {
   const [page, setPage] = useState(0);
   const [formData, setFormData] = useState({
-    email: "",
+    address: "",
     password: "",
     confirmPassword: "",
     firstName: "",
@@ -14,6 +15,8 @@ function Form() {
     nationality: "",
     other: "",
   });
+
+
 
   const FormTitles = ["OtherInfo", "Sign Up"];
 
