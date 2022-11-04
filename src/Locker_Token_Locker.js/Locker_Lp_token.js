@@ -8,6 +8,36 @@ function SignUpInfo({ formData, setFormData }) {
 
   const [isProcessing, setIsProcessing] = useState(false)
   const [tokenDetails, setTokenDetails] = useState({})
+  const [TokenDetailsError, setTokenDetailsError] = useState('')
+
+  const displayTokenDetails = async (event) => {
+    console.log(event.target.value.length)
+    if (event.target.value.length === 42) {
+      setTokenDetailsError('')
+      setIsProcessing(true)
+      const details = await fetchTokenDetails(event.target.value)
+      if (details) {
+        console.log(details)
+        setTokenDetails(details)
+        setFormData({ ...formData, address: event.target.value })
+        setIsProcessing(false)
+
+      } else {
+        setTokenDetailsError('invalid Address')
+        console.log("invalid Address")
+        setIsProcessing(false)
+      }
+
+    } else { setTokenDetailsError('Invalid data') }
+  }
+
+  const captureAmount = async (event) => {
+    setFormData({ ...formData, amount: event.target.value })
+
+  }
+  const captureDate = async (event) => {
+    setFormData({ ...formData, unlockdate: event.target.value })
+  }
 
   return (
     <>
@@ -32,20 +62,8 @@ function SignUpInfo({ formData, setFormData }) {
                   <input
                     type="text"
                     placeholder="Address"
-                    value={formData.address}
-                    onInput={async (event) => {
-                      setFormData({ ...formData, address: event.target.value })
-                      console.log(formData.address.length)
-                      setIsProcessing(true)
-                      if (formData.address.length === 42) {
-                        const details = await fetchTokenDetails(formData.address)
-                        console.log(details)
-                        setTokenDetails(details)
-                        setIsProcessing(false)
-                      }
-                    }
+                    onChange={displayTokenDetails}
 
-                    }
                   />
 
                   {isProcessing
@@ -57,6 +75,8 @@ function SignUpInfo({ formData, setFormData }) {
                     </>
                     : ""
                   }
+
+                  <p id="TokenDetailsError" className="fs-6 mt-1 text-danger">{TokenDetailsError}</p>
 
                 </div>
               </div>
@@ -120,14 +140,15 @@ function SignUpInfo({ formData, setFormData }) {
             </div>
             <div className="page1_section_form_no_amt fl-left ">
               <div className="page1_section_form_part1 fl-left">
-                <input type="text" placeholder="14,774,566" />
+                <input
+                  id="amount"
+                  type="text"
+                  placeholder="14,774,566"
+                  onChange={captureAmount}
+                />
               </div>
-              <div className="page1_section_form_part2 fl-right">SXP</div>
+              <div className="page1_section_form_part2 fl-right">{tokenDetails.symbol}</div>
             </div>
-
-            {/* <div className="page1_section_form_add fl-right ">
-              <button>Add</button>
-            </div> */}
             <Modal />
           </div>
 
@@ -136,13 +157,12 @@ function SignUpInfo({ formData, setFormData }) {
               Unlock Date <span>*</span> <img src="/img/Ques.png" alt="" />{" "}
             </p>
           </div>
-          <form action="#">
-            <input
-              type="datetime-local"
-              id="birthdaytime_locker"
-              name="birthdaytime"
-            />
-          </form>
+          <input
+            type="datetime-local"
+            id="unLockDate"
+            name="birthdaytime"
+            onChange={captureDate}
+          />
         </div>
       </div>
     </>

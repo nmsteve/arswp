@@ -6,14 +6,11 @@ import OtherInfo from "./Preview";
 function Form() {
   const [page, setPage] = useState(0);
   const [formData, setFormData] = useState({
+    tokentype: "",
     address: "",
-    password: "",
-    confirmPassword: "",
-    firstName: "",
-    lastName: "",
-    username: "",
-    nationality: "",
-    other: "",
+    amount: "",
+    unlockdate: "",
+    distription: "",
   });
 
 
@@ -23,8 +20,6 @@ function Form() {
   const PageDisplay = () => {
     if (page === 0) {
       return <SignUpInfo formData={formData} setFormData={setFormData} />;
-      // } else if (page === 1) {
-      //   return <PersonalInfo formData={formData} setFormData={setFormData} />;
     } else {
       return <OtherInfo formData={formData} setFormData={setFormData} />;
     }
@@ -33,7 +28,7 @@ function Form() {
   return (
     <div className="form">
       <div className="form-container">
-        <div className="header">{/* <h1>{FormTitles[page]}</h1> */}</div>
+        <div className="header"></div>
         <div className="body">{PageDisplay()}</div>
         <div className="footer1">
           <button
@@ -50,7 +45,6 @@ function Form() {
             className="footer"
             onClick={() => {
               if (page === FormTitles.length - 1) {
-                alert("FORM SUBMITTED");
                 console.log(formData);
               } else {
                 setPage((currPage) => currPage + 1);
