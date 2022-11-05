@@ -158,7 +158,7 @@ export default function Aside() {
                     <div class="sidebar_contain_aside">
                       <Link to="/Lockertab">Locked Assets</Link>
 
-                      <Link to="/Createsalelocker">Token Locker</Link>
+                      <Link onClick={() => { window.location.pathname = "Createsalelocker" }}>Token Locker</Link>
 
                       <Link to="/Createsalelocker/LPLocker">LP Locker</Link>
                     </div>
