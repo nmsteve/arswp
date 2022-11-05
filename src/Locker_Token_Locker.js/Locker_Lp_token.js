@@ -1,6 +1,7 @@
 import { React, useState } from "react";
 import Modal from "../ModalLocker";
 import { Spinner } from "react-bootstrap";
+import moment from 'moment/moment'
 
 import { fetchTokenDetails } from "../connect/dataProccing";
 
@@ -17,9 +18,13 @@ function SignUpInfo({ formData, setFormData }) {
       setIsProcessing(true)
       const details = await fetchTokenDetails(event.target.value)
       if (details) {
-        console.log(details)
+        console.log(details.name, details.symbol, details.supply)
         setTokenDetails(details)
-        setFormData({ ...formData, address: event.target.value })
+
+        setFormData({
+          ...formData, address: event.target.value, name: details.name, symbol: details.symbol,
+          decimals: details.decimals, supply: details.supply
+        })
         setIsProcessing(false)
 
       } else {
@@ -30,13 +35,17 @@ function SignUpInfo({ formData, setFormData }) {
 
     } else { setTokenDetailsError('Invalid data') }
   }
-
   const captureAmount = async (event) => {
     setFormData({ ...formData, amount: event.target.value })
 
   }
   const captureDate = async (event) => {
-    setFormData({ ...formData, unlockdate: event.target.value })
+    const unlockTimestamp = Date.parse(event.target.value)
+    const diff = unlockTimestamp - Date.now()
+    const duration = (moment.duration(diff, "millisecond").asDays()).toFixed()
+    console.log(duration)
+    console.log(unlockTimestamp)
+    setFormData({ ...formData, unlockdate: event.target.value, unlockTimestamp: unlockTimestamp, lockPeriod: duration })
   }
 
   return (

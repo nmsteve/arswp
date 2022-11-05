@@ -1,4 +1,5 @@
 import React from "react";
+import moment from 'moment/moment'
 
 function OtherInfo({ formData, setFormData }) {
   return (
@@ -28,7 +29,7 @@ function OtherInfo({ formData, setFormData }) {
             </div>
             <div className="section_set_1">
               <div className="inner_section_4_a fl-left">Name</div>
-              <div className="inner_section_4_b fl-right"> Swipe Token</div>
+              <div className="inner_section_4_b fl-right">{formData.name}</div>
             </div>
 
             <div className="clear hr_inner">
@@ -36,14 +37,14 @@ function OtherInfo({ formData, setFormData }) {
             </div>
             <div className="section_set_1">
               <div className="inner_section_4_a fl-left">Symbol</div>
-              <div className="inner_section_4_b fl-right"> SXP</div>
+              <div className="inner_section_4_b fl-right">{formData.symbol}</div>
             </div>
             <div className="clear hr_inner">
               <hr />
             </div>
             <div className="section_set_1">
               <div className="inner_section_4_a fl-left">Decimals</div>
-              <div className="inner_section_4_b fl-right">18</div>
+              <div className="inner_section_4_b fl-right">{formData.decimals}</div>
             </div>
             <div className="clear hr_inner">
               <hr />
@@ -51,7 +52,7 @@ function OtherInfo({ formData, setFormData }) {
 
             <div className="section_set_1">
               <div className="inner_section_4_a fl-left">Total supply</div>
-              <div className="inner_section_4_b fl-right">200,000,000 SXP</div>
+              <div className="inner_section_4_b fl-right">{formData.supply}{" "}{formData.symbol}</div>
             </div>
             <div className="clear app10_hr_pad">
               <hr />
@@ -68,7 +69,7 @@ function OtherInfo({ formData, setFormData }) {
                 Amount to be locked
               </div>
               <div className="inner_section_4_b fl-right">
-                14,774,566 WBNB/Sxp
+                {formData.amount}{" "} {formData.symbol}
               </div>
             </div>
             <div className="clear app10_hr_pad">
@@ -78,14 +79,14 @@ function OtherInfo({ formData, setFormData }) {
               <div className="inner_section_4_a fl-left">
                 Lock Period (Days)
               </div>
-              <div className="inner_section_4_b fl-right">365</div>
+              <div className="inner_section_4_b fl-right">{(formData.lockPeriod)}</div>
             </div>
             <div className="clear app10_hr_pad">
               <hr />
             </div>
             <div className="section_set_1">
               <div className="inner_section_4_a fl-left">Unlock Date</div>
-              <div className="inner_section_4_b fl-right">2022-09-04</div>
+              <div className="inner_section_4_b fl-right">{moment(formData.unlockdate).format('llll')}</div>
             </div>
             <div className="clear app10_hr_pad">
               <hr />
