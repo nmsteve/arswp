@@ -6,7 +6,9 @@ import Preview from "./Preview";
 import { lock } from "../connect/dataProccing";
 
 function Form() {
+  const [isProccessing, setIsProcessing] = useState(false)
   const [page, setPage] = useState(0);
+
   const [formData, setFormData] = useState({
     name: "",
     symbol: "",
@@ -17,17 +19,18 @@ function Form() {
     unlockdate: "",
     unlockTimestamp: "",
     lockPeriod: "",
-    TokenType: "",
+    tokenType: "",
   });
-
-
 
   const FormTitles = ["TokenType", "TokenDetails", "Preview"];
 
   const PageDisplay = () => {
     if (page === 0) {
+      return <TokenType formData={formData} setFormData={setFormData} page={page} setPage={setPage} />
+    }
+    else if (page === 1) {
       return <TokenDetails formData={formData} setFormData={setFormData} />;
-    } else {
+    } else if (page === 2) {
       return <Preview formData={formData} setFormData={setFormData} />;
     }
   };
@@ -39,38 +42,51 @@ function Form() {
 
         <div className="body">{PageDisplay()}</div>
 
-        <div className="footer1">
+        {page === 0 ? "" :
+          <div className="footer1">
 
-          <button
-            className="go_next"
-            disabled={page == 0}
-            onClick={() => {
-              setPage((currPage) => currPage - 1);
-            }}
-          >
-            <img src="/img/Arrow - Right.png" alt="" />
-            Go back
-          </button>
+            <button
+              className="go_next"
+              disabled={page == 0}
+              onClick={() => {
+                setPage((currPage) => currPage - 1);
+              }}
+            >
+              <img src="/img/Arrow - Right.png" alt="" />
+              Go back
+            </button>
 
-          <button
-            className="footer"
-            onClick={() => {
-              if (page === FormTitles.length - 1) {
-                console.log(formData);
-                lock(formData)
-              } else {
-                setPage((currPage) => currPage + 1);
-                console.log(formData);
-              }
-            }}
-          >
-            {page === FormTitles.length - 1 ? "Lock" : "Next"}
-          </button>
+            <button
+              className="footer"
+              onClick={() => {
+                if (page === FormTitles.length - 1) {
+                  console.log(formData);
+                  lock(setIsProcessing, formData)
 
-        </div>
+                } else {
+
+                  setPage((currPage) => currPage + 1);
+                  console.log(formData);
+                }
+              }}
+            >
+              {isProccessing ?
+                <>
+                  <div class="spinner-border text-primary mt-2" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  {' '}Processing...
+                </>
+                :
+                page === FormTitles.length - 1 ? "Lock" : "Next"}
+            </button>
+
+          </div>}
+
       </div>
     </div>
   );
+
 }
 
 export default Form;

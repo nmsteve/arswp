@@ -58,6 +58,7 @@ function SignUpInfo({ formData, setFormData }) {
           </a>
 
           <a href="">Preview</a>
+
         </div>
         <div className="block_section_1_airdrop_form">
           <div className="right-block">
@@ -158,10 +159,10 @@ function SignUpInfo({ formData, setFormData }) {
               </div>
               <div className="page1_section_form_part2 fl-right">{tokenDetails.symbol}</div>
             </div>
-            <Modal />
+            {/* <Modal /> */}
           </div>
-
-          <div className="Airdropinfo_right_title_block_1 locker_mt_3 fl-left">
+          <div className="mt-5"></div>
+          <div className="Airdropinfo_right_title_block_1 locker_mt_3 fl-left ">
             <p>
               Unlock Date <span>*</span> <img src="/img/Ques.png" alt="" />{" "}
             </p>

@@ -3,7 +3,7 @@ import TopNavAllThree from "./Components/Topnavbar_section/TopNavAllThree";
 import Topnavicon2 from "./Components/Topnavbar_section/Topnavicon2";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { setTokenType } from "./connect/dataProccing";
+
 
 import React from "react";
 
@@ -12,7 +12,6 @@ export default function LockerLockerAsset5() {
   const [selected, setSelected] = useState("");
   const handleChange = (value) => {
     setSelected(value);
-    setTokenType(value)
     console.log(value)
   };
   return (
@@ -106,7 +105,7 @@ export default function LockerLockerAsset5() {
             </div>
           </div>
 
-        </div>
+        </div>                                                                                                                                                                                                                                                                                                   v>
 
         <div className="clear"></div>
       </div>

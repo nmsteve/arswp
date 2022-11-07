@@ -28,6 +28,14 @@ function OtherInfo({ formData, setFormData }) {
               <hr />
             </div>
             <div className="section_set_1">
+              <div className="inner_section_4_a fl-left">Type</div>
+              <div className="inner_section_4_b fl-right">{formData.tokenType}</div>
+            </div>
+
+            <div className="clear hr_inner">
+              <hr />
+            </div>
+            <div className="section_set_1">
               <div className="inner_section_4_a fl-left">Name</div>
               <div className="inner_section_4_b fl-right">{formData.name}</div>
             </div>
