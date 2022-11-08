@@ -1,9 +1,10 @@
 import { React, useState } from "react";
 
+
 const TokenType = ({ formData, setFormData, page, setPage }) => {
 
     const [selected, setSelected] = useState("");
-    const handleChange = (value) => {
+    const handleChange = async (value) => {
         setSelected(value);
         setFormData({ ...formData, tokenType: value })
         console.log(value)

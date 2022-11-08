@@ -5,47 +5,85 @@ import moment from 'moment/moment'
 
 import { fetchTokenDetails } from "../connect/dataProccing";
 
-function SignUpInfo({ formData, setFormData }) {
+function TokenDetails({
+  formData, setFormData,
+  tokenAddressError, setTokenAddressError,
+  tokenAmountError, setAmountError,
+  unlockDateError, setUnlockDateError
+}) {
 
   const [isProcessing, setIsProcessing] = useState(false)
   const [tokenDetails, setTokenDetails] = useState({})
-  const [TokenDetailsError, setTokenDetailsError] = useState('')
+
 
   const displayTokenDetails = async (event) => {
     console.log(event.target.value.length)
-    if (event.target.value.length === 42) {
-      setTokenDetailsError('')
-      setIsProcessing(true)
-      const details = await fetchTokenDetails(event.target.value)
-      if (details) {
-        console.log(details.name, details.symbol, details.supply)
-        setTokenDetails(details)
+    try {
 
-        setFormData({
-          ...formData, address: event.target.value, name: details.name, symbol: details.symbol,
-          decimals: details.decimals, supply: details.supply
-        })
-        setIsProcessing(false)
-
-      } else {
-        setTokenDetailsError('invalid Address')
-        console.log("invalid Address")
-        setIsProcessing(false)
+      if (event.target.value.length != 42) {
+        setTokenAddressError('Invalid data')
       }
+      else if (event.target.value === "0x0000000000000000000000000000000000000000") {
+        setTokenAddressError('invalid Address')
+        console.log("invalid Address")
+      }
+      else {
+        setTokenAddressError('')
+        setIsProcessing(true)
 
-    } else { setTokenDetailsError('Invalid data') }
+        const details = await fetchTokenDetails(event.target.value)
+
+        if (details) {
+          console.log(details.name, details.symbol, details.supply)
+          setTokenDetails(details)
+
+          setFormData({
+            ...formData, address: event.target.value, name: details.name, symbol: details.symbol,
+            decimals: details.decimals, supply: details.supply
+          })
+          setIsProcessing(false)
+        } else {
+          setTokenAddressError('incorrect Address')
+          setIsProcessing(false)
+
+        }
+
+
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
   }
   const captureAmount = async (event) => {
-    setFormData({ ...formData, amount: event.target.value })
+    const amount = event.target.value
+    if (amount > 0) {
+      setAmountError('')
+      setFormData({ ...formData, amount: amount })
+
+    } else {
+      setAmountError('Amount less than zero')
+
+    }
+
 
   }
   const captureDate = async (event) => {
     const unlockTimestamp = Date.parse(event.target.value)
     const diff = unlockTimestamp - Date.now()
-    const duration = (moment.duration(diff, "millisecond").asDays()).toFixed()
-    console.log(duration)
-    console.log(unlockTimestamp)
-    setFormData({ ...formData, unlockdate: event.target.value, unlockTimestamp: unlockTimestamp, lockPeriod: duration })
+    if (diff < 0) {
+      setUnlockDateError('Unlock date less than current.')
+    } else {
+      setUnlockDateError('')
+
+      const duration = moment.duration(diff, "millisecond") //.asDays()).toFixed()
+      const daysDuration = duration.asDays().toFixed()
+      const secsDuration = (diff / 1000).toFixed()
+
+      console.log('Duration', daysDuration)
+
+      console.log(unlockTimestamp)
+      setFormData({ ...formData, unlockdate: event.target.value, unlockTimestamp: unlockTimestamp, lockPeriod: daysDuration, duration: secsDuration })
+    }
   }
 
   return (
@@ -86,7 +124,7 @@ function SignUpInfo({ formData, setFormData }) {
                     : ""
                   }
 
-                  <p id="TokenDetailsError" className="fs-6 mt-1 text-danger">{TokenDetailsError}</p>
+                  <p id="tokenAddressError" className="fs-6 mt-1 text-danger">{tokenAddressError}</p>
 
                 </div>
               </div>
@@ -158,6 +196,7 @@ function SignUpInfo({ formData, setFormData }) {
                 />
               </div>
               <div className="page1_section_form_part2 fl-right">{tokenDetails.symbol}</div>
+              <p id="tokenAddressError" className="fs-6 mt-1 text-danger">{tokenAmountError}</p>
             </div>
             {/* <Modal /> */}
           </div>
@@ -173,10 +212,16 @@ function SignUpInfo({ formData, setFormData }) {
             name="birthdaytime"
             onChange={captureDate}
           />
+          <p id="unlockDateError" className="fs-6 mt-1 text-danger">{unlockDateError}</p>
+          <div>
+
+          </div>
         </div>
       </div>
     </>
   );
+
+
 }
 
-export default SignUpInfo;
+export default TokenDetails;
