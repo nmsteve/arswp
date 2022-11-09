@@ -4,8 +4,6 @@ import { ERC20ABI, S_LOCKABI, R_LOCKABI } from "./abi"
 const STANDARD_LOCK_ADDRESS = "0x4A610a3a46539b460FE11758cE8d51A518DF8dF5";
 const REWARD_LOCK_ADDRESS = "0x918cCbFb55E0e2324B46b5C9737943E1Ba9110DB"
 
-const testValue = ethers.utils.parseEther("0.02");
-
 let provider = ethers.getDefaultProvider('https://data-seed-prebsc-1-s1.binance.org:8545')
 
 
@@ -14,6 +12,7 @@ export const getStandardNormalLockFee = async () => {
         const s_lockContract = new ethers.Contract(STANDARD_LOCK_ADDRESS, S_LOCKABI, provider)
         const formatedlockFee = ethers.utils.formatEther(await s_lockContract.feeNormalLock())
         const lockFee = await s_lockContract.feeNormalLock()
+        console.log(formatedlockFee)
         return lockFee
     } catch (error) {
         console.log(error.message)
@@ -26,14 +25,13 @@ export const getRewardNormalLockFee = async () => {
         const r_lockContract = new ethers.Contract(REWARD_LOCK_ADDRESS, R_LOCKABI, provider)
         const formatedlockFee = ethers.utils.formatEther(await r_lockContract.lockFeeSimple())
         const lockFee = await r_lockContract.lockFeeSimple()
+        console.log(formatedlockFee)
         return lockFee
     } catch (error) {
         console.log(error.message)
     }
 
 }
-
-
 
 export const fetchTokenDetails = async (address) => {
 
@@ -55,15 +53,59 @@ export const fetchTokenDetails = async (address) => {
 
 }
 
-export async function lock(setIsProccessing, formdata) {
+export const approve = async (setIsProccessing, formdata, setPage) => {
+
+    if (typeof window.ethereum === "undefined") {
+        alert('Please Install MetaMask')
+        console.log('Please Install MetaMask')
+    } else
+        setIsProccessing(true)
+    //connect if not connected
+    await window.ethereum.request({ method: "eth_requestAccounts" })
+
+    try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const signer = provider.getSigner()
+
+        if (formdata.tokenType === "standard") {
+            const ERC20 = new ethers.Contract(formdata.address, ERC20ABI, signer)
+            const approve = await ERC20.approve(STANDARD_LOCK_ADDRESS, formdata.amount)
+            await approve.wait()
+
+            console.log("Approve", approve)
+        }
+        else if (formdata.tokenType === "reward") {
+            const ERC20 = new ethers.Contract(formdata.address, ERC20ABI, signer)
+            const approve = await ERC20.approve(REWARD_LOCK_ADDRESS, formdata.amount)
+            await approve.wait()
+
+            console.log("Approve", approve)
+
+        } else {
+            console.log("Type not selected")
+            alert("type not selected")
+        }
+
+    } catch (error) {
+        console.log(error.message)
+    }
+    setIsProccessing(false)
+    setPage((currpage) => currpage + 1)
+}
+
+export async function lock(setIsProccessing, formdata, setPage) {
     if (formdata.tokenType === "standard") {
-        lockStandard(setIsProccessing, formdata)
+        await lockStandard(setIsProccessing, formdata)
+        setPage(1)
     } else if (formdata.tokenType === "reward") {
-        lockReward(setIsProccessing, formdata)
+        await lockReward(setIsProccessing, formdata)
+        setPage(1)
     } else {
         alert('Token type not selected')
         console.log('Token type not selected')
     }
+
+
 }
 
 export async function lockStandard(setIsProccessing, formdata) {
@@ -82,8 +124,6 @@ export async function lockStandard(setIsProccessing, formdata) {
 
     if (typeof window.ethereum !== "undefined") {
 
-        //connect if not connected
-        await window.ethereum.request({ method: "eth_requestAccounts" })
 
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const signer = provider.getSigner()
@@ -91,15 +131,11 @@ export async function lockStandard(setIsProccessing, formdata) {
         console.log(`signer with ${signerAddy}...`)
 
         const LockContractForSigner = new ethers.Contract(STANDARD_LOCK_ADDRESS, S_LOCKABI, signer)
-        const tokenContract = new ethers.Contract(tokenAddress, ERC20ABI, signer);
+
 
         try {
 
             const fee = getStandardNormalLockFee()
-
-            const approve = await tokenContract.approve(STANDARD_LOCK_ADDRESS, amount)
-            await approve.wait()
-            console.log("Approve", approve)
 
             const transactionResponse = await LockContractForSigner.lock(
                 signerAddy, tokenAddress, false, amount, unlockTimestamp, description, { value: fee })
@@ -142,15 +178,11 @@ export async function lockReward(setIsProccessing, formdata) {
         console.log(`signer with ${signerAddy}...`)
 
         const LockContractForSigner = new ethers.Contract(REWARD_LOCK_ADDRESS, R_LOCKABI, signer)
-        const tokenContract = new ethers.Contract(tokenAddress, ERC20ABI, signer);
+
 
         try {
 
             const fee = await getRewardNormalLockFee()
-
-            const approve = await tokenContract.approve(REWARD_LOCK_ADDRESS, amount)
-            await approve.wait()
-            console.log("Approve", approve)
 
             const transactionResponse = await LockContractForSigner.createSimpleLock(
                 duration, amount, tokenAddress, { value: fee })

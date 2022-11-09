@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import TokenType from "./TokenType"
 import TokenDetails from "./Locker_Lp_token";
 import Preview from "./Preview";
 
-import { lock } from "../connect/dataProccing";
+import { lock, approve } from "../connect/dataProccing";
 
 function Form() {
   const [isProccessing, setIsProcessing] = useState(false)
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
     symbol: "",
@@ -20,7 +20,6 @@ function Form() {
     lockPeriod: "",
     tokenType: "",
   });
-  const FormTitles = ["TokenType", "TokenDetails", "Preview"];
 
   //Error handling
   const [tokenAddressError, setTokenAddressError] = useState('')
@@ -44,15 +43,17 @@ function Form() {
   }
 
   const PageDisplay = () => {
-    if (page === 0) {
+    if (page === 1) {
       return <TokenType formData={formData} setFormData={setFormData} page={page} setPage={setPage} />
     }
-    else if (page === 1) {
+    else if (page === 2) {
       return <TokenDetails formData={formData} setFormData={setFormData}
         tokenAddressError={tokenAddressError} setTokenAddressError={setTokenAddressError}
         tokenAmountError={tokenAmountError} setAmountError={setAmountError}
         unlockDateError={unlockDateError} setUnlockDateError={setUnlockDateError} />;
-    } else if (page === 2) {
+    } else if (page === 3) {
+      return <Preview formData={formData} setFormData={setFormData} />;
+    } else if (page === 4) {
       return <Preview formData={formData} setFormData={setFormData} />;
     }
   };
@@ -64,12 +65,12 @@ function Form() {
 
         <div className="body">{PageDisplay()}</div>
 
-        {page === 0 ? "" :
+        {page === 1 ? "" :
           <div className="footer1">
 
             <button
               className="go_next"
-              disabled={page == 0}
+              disabled={page === 0}
               onClick={() => {
                 setPage((currPage) => currPage - 1);
               }}
@@ -82,14 +83,20 @@ function Form() {
               className="footer"
               onClick={async () => {
 
-                if (page === 1) {
-                  validateData()
-                }
                 if (page === 2) {
-                  console.log(formData);
-                  await lock(setIsProcessing, formData)
-                  //window.location.pathname = "Lockertab"
+                  validateData()
+
                 }
+                else if (page === 3) {
+                  console.log(formData);
+                  await approve(setIsProcessing, formData, setPage)
+
+                }
+                else if (page === 4) {
+                  console.log(formData)
+                  await lock(setIsProcessing, formData, setPage)
+                }
+
               }}
             >
               {isProccessing ?
@@ -100,7 +107,7 @@ function Form() {
                   {' '}Processing...
                 </>
                 :
-                page === FormTitles.length - 1 ? "Lock" : "Next"}
+                page === 2 ? "Next" : page === 3 ? "Approve" : page === 4 ? "Lock" : ""}
             </button>
 
           </div>}

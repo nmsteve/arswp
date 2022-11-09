@@ -6,7 +6,19 @@ const TokenType = ({ formData, setFormData, page, setPage }) => {
     const [selected, setSelected] = useState("");
     const handleChange = async (value) => {
         setSelected(value);
-        setFormData({ ...formData, tokenType: value })
+        setFormData({
+            ...formData,
+            name: "",
+            symbol: "",
+            supply: "",
+            decimals: "",
+            address: "",
+            amount: "",
+            unlockdate: "",
+            unlockTimestamp: "",
+            lockPeriod: "",
+            tokenType: value,
+        })
         console.log(value)
     };
     return (
