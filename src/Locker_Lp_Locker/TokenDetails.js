@@ -3,7 +3,7 @@ import Modal from "../ModalLocker";
 import { Spinner } from "react-bootstrap";
 import moment from 'moment/moment'
 
-import { fetchTokenDetails } from "../connect/dataProccing";
+import { fetchTokenDetails, fetchLpTokenDitails } from "../connect/dataProccing";
 
 function TokenDetails({
   formData, setFormData,
@@ -17,7 +17,9 @@ function TokenDetails({
 
 
   const displayTokenDetails = async (event) => {
+    console.log(formData)
     console.log(event.target.value.length)
+
     try {
 
       if (event.target.value.length != 42) {
@@ -31,7 +33,9 @@ function TokenDetails({
         setTokenAddressError('')
         setIsProcessing(true)
 
+
         const details = await fetchTokenDetails(formData.tokenType, event.target.value)
+        console.log(details)
 
         if (details) {
           console.log(details.name, details.symbol, details.supply)
@@ -39,7 +43,8 @@ function TokenDetails({
 
           setFormData({
             ...formData, address: event.target.value, name: details.name, symbol: details.symbol,
-            decimals: details.decimals, supply: details.supply
+            decimals: details.decimals, supply: details.supply, quotePairName: details.quotePairName,
+            quotePairSymbol: details.quotePairSymbol, basePairName: details.basePairName, basePairSymbol: details.basePairSymbol
           })
           setIsProcessing(false)
         } else {
@@ -56,6 +61,9 @@ function TokenDetails({
   }
   const captureAmount = async (event) => {
     const amount = event.target.value
+
+
+
     if (amount > 0) {
       setAmountError('')
       setFormData({ ...formData, amount: amount })
@@ -134,7 +142,7 @@ function TokenDetails({
           <div className="block_section_4_form clear">
             <div className="section_set_1">
               <div className="Locker_mid_inner_section_4_a">
-                Token address Details
+                LP Token  Details
               </div>
             </div>
 
@@ -142,8 +150,16 @@ function TokenDetails({
               <hr />
             </div>
             <div className="section_set_1">
-              <div className="inner_section_4_a fl-left">Name</div>
-              <div className="inner_section_4_b fl-right">{tokenDetails.name}</div>
+              <div className="inner_section_4_a fl-left">Quote Pair</div>
+              <div className="inner_section_4_b fl-right">{tokenDetails.quotePairName}</div>
+            </div>
+
+            <div className="clear hr_inner">
+              <hr />
+            </div>
+            <div className="section_set_1">
+              <div className="inner_section_4_a fl-left">Base Pair</div>
+              <div className="inner_section_4_b fl-right">{tokenDetails.basePairName}</div>
             </div>
 
             <div className="clear hr_inner">
@@ -151,14 +167,7 @@ function TokenDetails({
             </div>
             <div className="section_set_1">
               <div className="inner_section_4_a fl-left">Symbol</div>
-              <div className="inner_section_4_b fl-right">{tokenDetails.symbol}</div>
-            </div>
-            <div className="clear hr_inner">
-              <hr />
-            </div>
-            <div className="section_set_1">
-              <div className="inner_section_4_a fl-left">Decimals</div>
-              <div className="inner_section_4_b fl-right">{tokenDetails.decimals}</div>
+              <div className="inner_section_4_b fl-right">{tokenDetails.quotePairSymbol}/{tokenDetails.basePairSymbol}</div>
             </div>
             <div className="clear hr_inner">
               <hr />
@@ -169,6 +178,13 @@ function TokenDetails({
               <div className="inner_section_4_b fl-right">{tokenDetails.supply}</div>
             </div>
             <div className="clear app10_hr_pad">
+              <hr />
+            </div>
+            <div className="section_set_1">
+              <div className="inner_section_4_a fl-left">Dex Listed</div>
+              <div className="inner_section_4_b fl-right">{tokenDetails.name}</div>
+            </div>
+            <div className="clear hr_inner">
               <hr />
             </div>
 
@@ -195,7 +211,7 @@ function TokenDetails({
                   onChange={captureAmount}
                 />
               </div>
-              <div className="page1_section_form_part2 fl-right">{tokenDetails.symbol}</div>
+              <div className="page1_section_form_part2 fl-right">{tokenDetails.quotePairSymbol}/{tokenDetails.basePairSymbol}</div>
               <p id="tokenAddressError" className="fs-6 mt-1 text-danger">{tokenAmountError}</p>
             </div>
             {/* <Modal /> */}

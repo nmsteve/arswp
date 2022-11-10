@@ -2,10 +2,13 @@ import { ethers } from "ethers"
 import { ERC20ABI, S_LOCKABI, R_LOCKABI } from "./abi"
 import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 
+
 const STANDARD_LOCK_ADDRESS = "0x4A610a3a46539b460FE11758cE8d51A518DF8dF5";
 const REWARD_LOCK_ADDRESS = "0x918cCbFb55E0e2324B46b5C9737943E1Ba9110DB"
 
 let provider = ethers.getDefaultProvider('https://data-seed-prebsc-1-s1.binance.org:8545')
+//let provider = ethers.getDefaultProvider('https://preseed-testnet-1.roburna.com/')
+//let provider = ethers.getDefaultProvider('https://eth-goerli.alchemyapi.io/v2/rr_rfvIEYniAMzCuEGufDbt7ebMWV1JO')
 
 /*
 Token Locker Fuctions
@@ -37,7 +40,7 @@ export const getRewardNormalLockFee = async () => {
 
 }
 
-export const fetchTokenDetails = async (address) => {
+export const fetchTokenDetails = async (type, address) => {
 
     try {
         const token = new ethers.Contract(address, ERC20ABI, provider)
@@ -46,7 +49,33 @@ export const fetchTokenDetails = async (address) => {
         const symbol = await token.symbol()
         const decimals = await token.decimals()
         const supply = (await token.totalSupply() / 10 ** decimals).toLocaleString()
-        return { name: name, symbol: symbol, decimals: decimals, supply: supply }
+        let quotePairName
+        let quotePairSymbol
+        let basePairName
+        let basePairSymbol
+
+        if (type === "LP") {
+
+            const lpToken = new ethers.Contract(address, IUniswapV2Pair.abi, provider)
+
+            const token0 = await lpToken.token0()
+            const token1 = await lpToken.token1()
+
+            const quotePair = new ethers.Contract(token0, ERC20ABI, provider)
+            const basePair = new ethers.Contract(token1, ERC20ABI, provider)
+
+            quotePairName = await quotePair.name()
+            quotePairSymbol = await quotePair.symbol()
+            basePairName = await basePair.name()
+            basePairSymbol = await basePair.symbol()
+
+        }
+
+        return {
+            name: name, symbol: symbol, decimals: decimals, supply: supply,
+            quotePairName: quotePairName, quotePairSymbol: quotePairSymbol,
+            basePairName: basePairName, basePairSymbol: basePairSymbol
+        }
 
 
     } catch (error) {
@@ -71,7 +100,7 @@ export const approve = async (setIsProccessing, formdata, setPage) => {
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         const signer = provider.getSigner()
 
-        if (formdata.tokenType === "standard") {
+        if (formdata.tokenType === "standard" || formdata.tokenType === "LP") {
             const ERC20 = new ethers.Contract(formdata.address, ERC20ABI, signer)
             const approve = await ERC20.approve(STANDARD_LOCK_ADDRESS, formdata.amount)
             await approve.wait()
@@ -99,12 +128,16 @@ export const approve = async (setIsProccessing, formdata, setPage) => {
 
 export async function lock(setIsProccessing, formdata, setPage) {
     if (formdata.tokenType === "standard") {
-        await lockStandard(setIsProccessing, formdata)
+        await lockStandard(false, setIsProccessing, formdata)
         setPage(1)
     } else if (formdata.tokenType === "reward") {
         await lockReward(setIsProccessing, formdata)
         setPage(1)
-    } else {
+    } else if (formdata.tokenType === "LP") {
+        await lockStandard(true, setIsProccessing, formdata)
+        setPage(1)
+    }
+    else {
         alert('Token type not selected')
         console.log('Token type not selected')
     }
@@ -112,7 +145,7 @@ export async function lock(setIsProccessing, formdata, setPage) {
 
 }
 
-export async function lockStandard(setIsProccessing, formdata) {
+export async function lockStandard(isLP, setIsProccessing, formdata) {
 
     setIsProccessing(true)
 
@@ -142,7 +175,7 @@ export async function lockStandard(setIsProccessing, formdata) {
             const fee = getStandardNormalLockFee()
 
             const transactionResponse = await LockContractForSigner.lock(
-                signerAddy, tokenAddress, false, amount, unlockTimestamp, description, { value: fee })
+                signerAddy, tokenAddress, isLP, amount, unlockTimestamp, description, { value: fee })
 
             await listenForTransactionMine(transactionResponse, provider)
 
@@ -207,13 +240,30 @@ LP Loker Functions
 ______________________________________________________________________________________________
 */
 
-export const fetchLpTokenDitails = async (setIsProccessing, formdata) => {
+export const fetchLpTokenDitails = async (address) => {
     try {
-        const lpToken = new ethers.Contract(formdata.address, IUniswapV2Pair, provider)
+        const lpToken = new ethers.Contract(address, IUniswapV2Pair.abi, provider)
+
         const token0 = await lpToken.token0()
         const token1 = await lpToken.token1()
-        console.log('token0', token0)
-        console.log('token1', token1)
+
+        const quotePair = new ethers.Contract(token0, ERC20ABI, provider)
+        const basePair = new ethers.Contract(token1, ERC20ABI, provider)
+
+        const quotePairName = await quotePair.name()
+        const quotePairSymbol = await quotePair.symbol()
+
+        const basePairName = await basePair.name()
+        const basePairSymbol = await basePair.symbol()
+
+        console.log('token0',)
+        console.log('token1', await basePair.name())
+
+        return {
+            quotePairName: quotePairName, quotePairSymbol: quotePairSymbol,
+            basePairName: basePairName, basePairSymbol: basePairSymbol
+        }
+
     } catch (error) {
         console.error(error)
     }

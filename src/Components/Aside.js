@@ -69,155 +69,154 @@ export default function Aside() {
           </header>
 
           <div className="menu-bar">
-            <div>
-              {/* <div className={open ? "sidebar-item open" : "sidebar-item"}> */}
-              <div className="menu">
-                <ul className="menu-links">
-                  <div>
-                    <li className="nav-link ">
-                      <a href="#">
-                        {/* <!-- <i className='bx bx-home icon' ></i> --> */}
-                        {/* <!-- <i className='bx bxs-grid-alt bx-rotate-180 icon' style='color:#a69f9f' ></i> --> */}
-                        <img src="/img/element-3.png" alt="" />
-                        {/* <img src="/img/AirdropRIP.png" alt="" /> */}
-                        <span
-                          className="text nav-test"
-                          style={{ display: isOpen ? "block" : "none" }}
-                        >
-                          Dashboard
-                        </span>
-                      </a>
-                    </li>
-                  </div>
+
+
+            <div className="menu">
+              <ul className="menu-links">
+                <div>
+                  <li className="nav-link ">
+                    <a href="#">
+
+                      <img src="/img/element-3.png" alt="" />
+
+                      <span
+                        className="text nav-test"
+                        style={{ display: isOpen ? "block" : "none" }}
+                      >
+                        Dashboard
+                      </span>
+                    </a>
+                  </li>
+                </div>
+                <div
+                  className={open1 ? "sidebar-item open1" : "sidebar-item"}
+                  id="tag1"
+                  style={tagg1}
+                >
+                  <li className="nav-link">
+                    <a href="#">
+                      {/* <!-- <i className='bx bx-home icon' ></i> --> */}
+                      <img src="/img/Icon.png" className="icon" alt="" />
+
+                      <span
+                        className="text nav-test"
+                        onClick={() => setOpen1(!open1)}
+                        style={{ display: isOpen ? "block" : "none" }}
+                      >
+
+                        Launchpad
+                      </span>
+                      <i
+                        class="bi bi-chevron-down"
+                        onClick={() => setOpen1(!open1)}
+                        style={{ display: isOpen ? "block" : "none" }}
+                      ></i>
+                    </a>
+                  </li>
                   <div
-                    className={open1 ? "sidebar-item open1" : "sidebar-item"}
-                    id="tag1"
-                    style={tagg1}
+                    class="sidebar_contain_aside"
+                    style={{ display: isOpen ? "block" : "none" }}
                   >
-                    <li className="nav-link">
-                      <a href="#">
-                        {/* <!-- <i className='bx bx-home icon' ></i> --> */}
-                        <img src="/img/Icon.png" className="icon" alt="" />
+                    <Link to="/LaunchpadPool/pools/Live" className="active1">
+                      Pools
+                    </Link>
 
-                        <span
-                          className="text nav-test"
-                          onClick={() => setOpen1(!open1)}
-                          style={{ display: isOpen ? "block" : "none" }}
-                        >
-                          {/* <Link to="LaunchpadPool" className="">
-                            Launchpad
-                          </Link> */}
-                          Launchpad
-                        </span>
-                        <i
-                          class="bi bi-chevron-down"
-                          onClick={() => setOpen1(!open1)}
-                          style={{ display: isOpen ? "block" : "none" }}
-                        ></i>
-                      </a>
-                    </li>
-                    <div
-                      class="sidebar_contain_aside"
-                      style={{ display: isOpen ? "block" : "none" }}
-                    >
-                      <Link to="/LaunchpadPool/pools/Live" className="active1">
-                        Pools
-                      </Link>
-
-                      <Link to="/Createsale" style={active2}>
-                        Create Sale{" "}
-                      </Link>
-                    </div>
+                    <Link to="/Createsale" style={active2}>
+                      Create Sale{" "}
+                    </Link>
                   </div>
-                  <div
-                    className={open2 ? "sidebar-item open2" : "sidebar-item"}
-                    id="tag2"
-                  >
-                    <li className="nav-link">
-                      <a href="#">
-                        <img
-                          src="/img/shield-security.png"
-                          className="icon"
-                          alt=""
-                        />
+                </div>
+                <div
+                  className={open2 ? "sidebar-item open2" : "sidebar-item"}
+                  id="tag2"
+                >
+                  <li className="nav-link">
+                    <a href="#">
+                      <img
+                        src="/img/shield-security.png"
+                        className="icon"
+                        alt=""
+                      />
 
-                        <span
-                          className="text nav-test"
-                          onClick={() => setOpen2(!open2)}
-                          style={{ display: isOpen ? "block" : "none" }}
-                        >
-                          Locker
-                        </span>
-                        <i
-                          class="bi bi-chevron-down toggle_btn_aside"
-                          onClick={() => setOpen2(!open2)}
-                          style={{ display: isOpen ? "block" : "none" }}
-                        ></i>
-                      </a>
-                    </li>
-                    <div class="sidebar_contain_aside">
-                      <Link to="/Lockertab">Locked Assets</Link>
+                      <span
+                        className="text nav-test"
+                        onClick={() => setOpen2(!open2)}
+                        style={{ display: isOpen ? "block" : "none" }}
+                      >
+                        Locker
+                      </span>
+                      <i
+                        class="bi bi-chevron-down toggle_btn_aside"
+                        onClick={() => setOpen2(!open2)}
+                        style={{ display: isOpen ? "block" : "none" }}
+                      ></i>
+                    </a>
+                  </li>
+                  <div class="sidebar_contain_aside">
+                    <Link to="/Lockertab">Locked Assets</Link>
 
-                      <Link onClick={() => { window.location.pathname = "Createsalelocker/TokenLocker" }}>Token Locker</Link>
+                    <Link onClick={() => { window.location.pathname = "Createsalelocker/TokenLocker" }}>
+                      Token Locker</Link>
 
-                      <Link to="/Createsalelocker/LPLocker">LP Locker</Link>
-                    </div>
+                    <Link to="/Createsalelocker/LPLocker">LP Locker</Link>
                   </div>
-                  <div
-                    className={open3 ? "sidebar-item open3" : "sidebar-item"}
-                    id="tag3"
-                  >
-                    <li className="nav-link">
-                      <a href="#">
-                        {/* <!-- <i className='bx bx-home icon' ></i> --> */}
-                        <img src="/img/airplane.png" className="icon" alt="" />
+                </div>
+                <div
+                  className={open3 ? "sidebar-item open3" : "sidebar-item"}
+                  id="tag3"
+                >
+                  <li className="nav-link">
+                    <a href="#">
+                      {/* <!-- <i className='bx bx-home icon' ></i> --> */}
+                      <img src="/img/airplane.png" className="icon" alt="" />
 
-                        <span
-                          className="text nav-test"
-                          onClick={() => setOpen3(!open3)}
-                          style={{ display: isOpen ? "block" : "none" }}
-                        >
-                          Airdropper
-                        </span>
-                        <i
-                          class="bi bi-chevron-down toggle_btn_aside"
-                          onClick={() => setOpen3(!open3)}
-                          style={{ display: isOpen ? "block" : "none" }}
-                        ></i>
-                      </a>
-                    </li>
-                    <div class="sidebar_contain_aside">
-                      <Link to="/live">Airdrops</Link>
+                      <span
+                        className="text nav-test"
+                        onClick={() => setOpen3(!open3)}
+                        style={{ display: isOpen ? "block" : "none" }}
+                      >
+                        Airdropper
+                      </span>
+                      <i
+                        class="bi bi-chevron-down toggle_btn_aside"
+                        onClick={() => setOpen3(!open3)}
+                        style={{ display: isOpen ? "block" : "none" }}
+                      ></i>
+                    </a>
+                  </li>
+                  <div class="sidebar_contain_aside">
+                    <Link to="/live">Airdrops</Link>
 
-                      <Link to="/airdropform1">Create Airdrop</Link>
-                    </div>
+                    <Link to="/airdropform1">Create Airdrop</Link>
                   </div>
-                  <div
-                    className={open4 ? "sidebar-item open4" : "sidebar-item"}
-                    id="tag4"
-                  >
-                    <li className="nav-link">
-                      <a href="#">
-                        {/* <!-- <i className='bx bx-home icon' ></i> --> */}
-                        <img src="/img/menu1.png" className="icon" alt="" />
+                </div>
+                <div
+                  className={open4 ? "sidebar-item open4" : "sidebar-item"}
+                  id="tag4"
+                >
+                  <li className="nav-link">
+                    <a href="#">
+                      {/* <!-- <i className='bx bx-home icon' ></i> --> */}
+                      <img src="/img/menu1.png" className="icon" alt="" />
 
-                        <span
-                          className="text nav-test"
-                          style={{ display: isOpen ? "block" : "none" }}
-                        >
-                          More Products
-                        </span>
-                        <i
-                          class="bi bi-chevron-down toggle_btn_aside"
-                          onClick={() => setOpen4(!open4)}
-                          style={{ display: isOpen ? "block" : "none" }}
-                        ></i>
-                      </a>
-                    </li>
-                  </div>
-                </ul>
-              </div>
+                      <span
+                        className="text nav-test"
+                        style={{ display: isOpen ? "block" : "none" }}
+                      >
+                        More Products
+                      </span>
+                      <i
+                        class="bi bi-chevron-down toggle_btn_aside"
+                        onClick={() => setOpen4(!open4)}
+                        style={{ display: isOpen ? "block" : "none" }}
+                      ></i>
+                    </a>
+                  </li>
+                </div>
+              </ul>
             </div>
+
+
             <div className="bottom-content">
               <li className=""></li>
               <li class="mode">
