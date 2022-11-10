@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TokenType from "./TokenType"
-import TokenDetails from "./Locker_Lp_token";
+import TokenDetails from "./TokenDetails";
 import Preview from "./Preview";
 
 import { lock, approve } from "../connect/dataProccing";

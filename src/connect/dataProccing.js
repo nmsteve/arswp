@@ -1,12 +1,16 @@
 import { ethers } from "ethers"
 import { ERC20ABI, S_LOCKABI, R_LOCKABI } from "./abi"
+import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 
 const STANDARD_LOCK_ADDRESS = "0x4A610a3a46539b460FE11758cE8d51A518DF8dF5";
 const REWARD_LOCK_ADDRESS = "0x918cCbFb55E0e2324B46b5C9737943E1Ba9110DB"
 
 let provider = ethers.getDefaultProvider('https://data-seed-prebsc-1-s1.binance.org:8545')
 
-
+/*
+Token Locker Fuctions
+____________________________________________________________________________________________________________-
+*/
 export const getStandardNormalLockFee = async () => {
     try {
         const s_lockContract = new ethers.Contract(STANDARD_LOCK_ADDRESS, S_LOCKABI, provider)
@@ -197,6 +201,22 @@ export async function lockReward(setIsProccessing, formdata) {
     }
 
     setIsProccessing(false)
+}
+/*
+LP Loker Functions
+______________________________________________________________________________________________
+*/
+
+export const fetchLpTokenDitails = async (setIsProccessing, formdata) => {
+    try {
+        const lpToken = new ethers.Contract(formdata.address, IUniswapV2Pair, provider)
+        const token0 = await lpToken.token0()
+        const token1 = await lpToken.token1()
+        console.log('token0', token0)
+        console.log('token1', token1)
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 function listenForTransactionMine(transactionResponse, provider) {
