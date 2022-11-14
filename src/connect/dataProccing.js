@@ -3,8 +3,8 @@ import { ERC20ABI, S_LOCKABI, R_LOCKABI } from "./abi"
 import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 
 
-const STANDARD_LOCK_ADDRESS = "0x4A610a3a46539b460FE11758cE8d51A518DF8dF5";
-const REWARD_LOCK_ADDRESS = "0x918cCbFb55E0e2324B46b5C9737943E1Ba9110DB"
+const STANDARD_LOCK_ADDRESS = "0x4A610a3a46539b460FE11758cE8d51A518DF8dF5"
+const REWARD_LOCK_ADDRESS = '0x957eda2bbA35429644464358198865a47E821032'
 
 let provider = ethers.getDefaultProvider('https://data-seed-prebsc-1-s1.binance.org:8545')
 //let provider = ethers.getDefaultProvider('https://preseed-testnet-1.roburna.com/')
@@ -222,7 +222,7 @@ export async function lockReward(setIsProccessing, formdata) {
             const fee = await getRewardNormalLockFee()
 
             const transactionResponse = await LockContractForSigner.createSimpleLock(
-                duration, amount, tokenAddress, { value: fee })
+                unlockTimestamp, amount, tokenAddress, { value: fee })
 
             await listenForTransactionMine(transactionResponse, provider)
 
